@@ -1,5 +1,9 @@
 package day05.member.model.dao;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,13 +11,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import day05.member.model.vo.Member;
 
 public class MemberDAO {
+	private Properties prop;
+
+	public MemberDAO() {
+		prop = new Properties();
+		Reader reader = null;
+		try {
+			reader = new FileReader("resources/query.properties");
+			prop.load(reader);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public int insertMember(Connection conn, Member member) {
-		String query = "INSERT INTO MEMBER_TBL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?,SYSDATE)";
+//		String query = "INSERT INTO MEMBER_TBL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?,SYSDATE)";
+		String query = prop.getProperty("insertMember");
 //		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = -1;
@@ -40,7 +60,8 @@ public class MemberDAO {
 	}
 
 	public int deleteMember(Connection conn, String memberId) {
-		String query = "DELETE INTO MEMBER_TBL WHERE MEMBER_ID(?, ?, ?, ?, ?, ?, ?, ?, ?,SYSDATE)";
+//		String query = "DELETE INTO MEMBER_TBL WHERE MEMBER_ID(?, ?, ?, ?, ?, ?, ?, ?, ?,SYSDATE)";
+		String query = prop.getProperty("deleteMember");
 //		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = -1;
@@ -61,7 +82,8 @@ public class MemberDAO {
 	}
 
 	public Member loginInfo(Connection conn, Member mOne) {
-		String query = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ? AND MEMBER_PWD = ?";
+//		String query = "SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ? AND MEMBER_PWD = ?";
+		String query = prop.getProperty("loginInfo");
 		Member member = null;
 //		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -86,7 +108,8 @@ public class MemberDAO {
 	}
 
 	public List<Member> selectAllMember(Connection conn) {
-		String query = "SELECT * FROM MEMBER_TBL";
+//		String query = "SELECT * FROM MEMBER_TBL";
+		String query = prop.getProperty("selectAllMember");
 		Statement stmt = null;
 		ResultSet rset = null;
 		List<Member> mList = null;
@@ -131,8 +154,9 @@ public class MemberDAO {
 
 	public int updateMember(Connection conn, Member member) {
 		int result = -1;
-		String query = "UPDATE MEMBER_TBL SET MEMBER_PWD = ?" + ", EMAIL = ?"
-				+ ", PHONE = ?, ADDRESS = ?, HOBBY = ? WHERE MEMBER_ID = ?";
+//		String query = "UPDATE MEMBER_TBL SET MEMBER_PWD = ?" + ", EMAIL = ?"
+//				+ ", PHONE = ?, ADDRESS = ?, HOBBY = ? WHERE MEMBER_ID = ?";
+		String query = prop.getProperty("updateMember");
 		try {
 //			Connection conn = jdbcTemplate.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(query);
